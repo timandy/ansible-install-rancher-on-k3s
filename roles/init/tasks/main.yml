@@ -1,0 +1,52 @@
+---
+# 这个剧本在所有节点上运行
+
+- name: 关闭firewalld
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: 永久关闭selinux
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: "^SELINUX="
+    line: "SELINUX=disabled"
+
+- name: 永久关闭swap
+  lineinfile:
+    dest: /etc/fstab
+    regexp: ".*swap"
+    line: ""
+
+- name: 立即关闭selinux和swap
+  shell: setenforce 0; swapoff -a
+
+- name: 设置hostname
+  hostname:
+    name: "{{ node_name }}"
+
+- name: 添加hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: 设置时区
+  file:
+    src: /usr/share/zoneinfo/Asia/Shanghai
+    dest: /etc/localtime
+    state: link
+    force: yes
+
+- name: 安装ntpdate
+  yum:
+    name: ntpdate
+    state: present
+
+- name: 同步时间
+  shell: ntpdate ntp.aliyun.com
+
+- name: 安装open-iscsi
+  yum:
+    name: iscsi-initiator-utils
+    state: present

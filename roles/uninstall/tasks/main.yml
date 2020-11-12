@@ -1,0 +1,10 @@
+---
+# 这个剧本在k3s节点上运行
+
+- name: 卸载k3s集群
+  shell: /usr/local/bin/k3s-uninstall.sh
+
+- name: 删除k3s容器
+  shell: docker container ls -a | grep k8s | awk '{print $1}' | xargs docker stop \
+    && docker container ls -a | grep k8s | awk '{print $1}' | xargs docker rm \
+    && docker image prune -a -f

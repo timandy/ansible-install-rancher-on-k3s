@@ -1,0 +1,9 @@
+---
+# 这个剧本在k3s节点上运行
+
+- name: 部署k3s集群
+  shell: curl -sfL http://rancher-mirror.cnrancher.com/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn sh -s - server \
+    --datastore-endpoint="{{ k3s_db_url }}" \
+    --docker
+  args:
+    warn: false

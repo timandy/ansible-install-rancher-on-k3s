@@ -1,0 +1,32 @@
+---
+# 这个剧本在localhost节点上运行
+
+- name: 获取Ansible工作目录
+  shell: pwd |sed 's#roles/tls##'
+  register: root_dir
+
+- name: 创建工作目录
+  file:
+    dest: "{{ root_dir.stdout }}/ssl"
+    state: directory
+
+- name: 准备生成证书脚本
+  copy:
+    src: create-self-signed-cert.sh
+    dest: "{{ root_dir.stdout }}/ssl"
+    mode: u+x
+
+- name: 创建证书
+  shell: cd {{ root_dir.stdout }}/ssl \
+    && /bin/bash create-self-signed-cert.sh \
+    --ssl-domain={{ rancher_domain }} \
+    --ssl-size=2048 \
+    --ssl-date=36500
+
+- name: 创建rancher命名空间
+  shell: kubectl create namespace cattle-system
+
+- name: 部署证书
+  shell: cd {{ root_dir.stdout }}/ssl \
+    && kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt --key=./tls.key \
+    && kubectl -n cattle-system create secret generic tls-ca --from-file=./cacerts.pem

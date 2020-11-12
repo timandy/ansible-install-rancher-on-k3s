@@ -1,0 +1,25 @@
+---
+# 这个剧本在localhost节点上运行
+
+- name: 创建helm配置
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~/.kube/config
+
+- name: 修改helm配置
+  lineinfile:
+    dest: ~/.kube/config
+    regexp: ".*server"
+    line: "    server: https://{{ k3s_domain }}"
+
+- name: 下载helm
+  get_url:
+    url: http://rancher-mirror.cnrancher.com/helm/v3.3.1/helm-v3.3.1-linux-amd64.tar.gz
+    dest: ./helm.tar.gz
+    validate_certs: no
+
+- name: 安装helm
+  shell: tar -zxvf ./helm.tar.gz \
+    && mv ./linux-amd64/helm /usr/local/bin/helm
+  args:
+    warn: false

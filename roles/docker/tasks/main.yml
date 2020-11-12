@@ -1,0 +1,30 @@
+---
+# 这个剧本在所有节点上运行
+- name: 安装依赖库
+  shell: yum install -y yum-utils device-mapper-persistent-data lvm2
+
+- name: 配置阿里云docker的yum源
+  shell: yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo \
+    && yum makecache fast
+
+- name: 安装docker-ce
+  yum:
+    name: docker-ce
+    state: present
+
+- name: 应用docker设置
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: 设置开机启动并重启docker
+  shell: systemctl enable docker && systemctl restart docker
+
+- name: 安装docker-compose
+  shell: yum -y install epel-release \
+    && yum -y install python-pip \
+    && pip install --upgrade pip \
+    && pip install docker-compose
+
+- name: 查看docker版本
+  shell: docker --version && docker-compose -version

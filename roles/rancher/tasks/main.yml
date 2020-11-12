@@ -1,0 +1,10 @@
+---
+# 这个剧本在localhost节点上运行
+
+- name: 部署rancher
+  shell: helm repo add rancher-stable http://rancher-mirror.oss-cn-beijing.aliyuncs.com/server-charts/stable \
+    && helm install rancher rancher-stable/rancher \
+    --namespace cattle-system \
+    --set hostname={{ rancher_domain }} \
+    --set ingress.tls.source=secret \
+    --set privateCA=true

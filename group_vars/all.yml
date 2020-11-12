@@ -1,0 +1,21 @@
+##########################################################################################################
+# k3s 使用的外部 mysql
+k3s_db_url: 'mysql://username:password@tcp(ip:port)/db'
+# k3s 域名
+k3s_domain: 'k3s.domain:16443'
+##########################################################################################################
+# rancher 域名, 可以同 ks3.domain
+rancher_domain: 'rancher.domain'
+##########################################################################################################
+# docker 镜像地址
+docker_registry_mirrors: 'https://mirror.docker'
+# docker 私有仓库
+docker_insecure_registries: 'registry.domain:8090'
+# docker 数据目录
+docker_data_root: '/data/docker'
+# docker 日志驱动
+docker_log_driver: 'json-file'
+# docker 日志设置
+docker_log_opts_max_size: '100m'
+docker_logs_opts_max_file: '3'
+##########################################################################################################
