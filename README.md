@@ -42,7 +42,9 @@ ansible-playbook -i hosts install.yml
 ansible-playbook -i hosts uninstall.yml
 ```
 
-注意: 卸载的时候会删除所有包含 `k8s` 容器并清理镜像. 参见 [./roles/uninstall/tasks/main.yml](roles/uninstall/tasks/main.yml)
+注意: 卸载的时候会删除所有包含 `k8s` 容器并清理镜像. 参见 [./roles/uninstall/tasks/main.yml](roles/uninstall/tasks/main.yml)。
+
+自己测试的时候要想彻底卸载，还需手动 drop 数据库里的 kine 表。
 
 ## 问题
  ```
