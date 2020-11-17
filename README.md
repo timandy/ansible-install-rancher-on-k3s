@@ -26,6 +26,12 @@ cd ssh
 执行 copykey.sh 生成并分发秘钥。
 
 ## 4、一键部署
+
+### 安装 docker
+```
+ansible-playbook -i hosts docker.yml
+```
+
 ### 部署命令
 ```
 ansible-playbook -i hosts install.yml
